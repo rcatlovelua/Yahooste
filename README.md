@@ -28,7 +28,7 @@
 > [!IMPORTANT]
 > Меню открывается по открытию чата (**[T]**)  и показывается в нижнем правом углу экрана.
 
-*(Сюда можно вставить скриншот меню, например: `![](./menu_screenshot.png)`)*
+<img align="center" width="300" src="https://github.com/rcatlovelua/Yahooste/blob/main/.not-for-mod-srcc/image.png?raw=true">
 
 ---
 
