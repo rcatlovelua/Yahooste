@@ -28,7 +28,7 @@
 > [!IMPORTANT]
 > Меню открывается по открытию чата (**[T]**)  и показывается в нижнем правом углу экрана.
 
-<img align="center" width="300" src="https://github.com/rcatlovelua/Yahooste/blob/main/.not-for-mod-srcc/image.png?raw=true">
+<img align="center" width="1000" src="https://github.com/rcatlovelua/Yahooste/blob/main/.not-for-mod-srcc/image.png?raw=true">
 
 ---
 
