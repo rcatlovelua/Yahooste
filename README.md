@@ -73,5 +73,6 @@ The menu automatically appears in the **bottom-right corner** of your screen whe
 *Пока пусто...*
 
 </details>
+
 > [!CAUTION]
 > Dear modrinth moderators, source of mod is in another thread!
