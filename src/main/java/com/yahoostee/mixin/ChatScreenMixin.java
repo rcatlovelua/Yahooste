@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.input.KeyInput;
 
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin extends Screen {
@@ -23,13 +25,13 @@ public abstract class ChatScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        // Инициализируем панель при открытии чата и добавляем элементы управления
         YahoosteePanel.init((ChatScreen) (Object) this, this.width, this.height, this::addDrawableChild, this.chatField);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        // Отрисовываем фон под панелью на этапе HEAD, чтобы кнопки рендерились поверх фона
         YahoosteePanel.drawBackground(context, this.width, this.height);
     }
+    
+
 }

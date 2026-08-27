@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(.\\gradlew *)"
+      "Bash(.\\gradlew *)",
+      "Skill(new-app)",
+      "Bash(mkdir *)",
+      "Bash(copy *)"
     ]
   },
   "$version": 4
