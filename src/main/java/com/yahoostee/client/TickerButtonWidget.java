@@ -85,4 +85,6 @@ public class TickerButtonWidget extends ClickableWidget {
     protected void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
         this.appendDefaultNarrations(builder);
     }
+    
 }
+

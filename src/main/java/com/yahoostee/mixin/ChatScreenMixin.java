@@ -5,7 +5,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,11 +28,10 @@ public abstract class ChatScreenMixin extends Screen {
                 (ChatScreen) (Object) this,
                 this.width,
                 this.height,
-                this::addDrawableChild,
+                this::addDrawable,
                 this.chatField
         );
 
-        // Всегда оставляем фокус на поле чата.
         this.setFocused(this.chatField);
     }
 
@@ -51,52 +49,5 @@ public abstract class ChatScreenMixin extends Screen {
                 this.height
         );
     }
-
-    /*
-     * Полностью блокируем клавиатурную навигацию
-     * по кнопкам панели.
-     *
-     * Мышкой кнопки продолжают работать.
-     */
-    @Inject(
-            method = "keyPressed",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private void onKeyPressed(
-            KeyInput input,
-            CallbackInfo ci
-    ) {
-        int key = input.key();
-
-        // Стрелки
-        if (key == 262 || // RIGHT
-            key == 263 || // LEFT
-            key == 264 || // DOWN
-            key == 265 || // UP
-
-            // ENTER
-            key == 257 ||
-
-            // NUMPAD ENTER
-            key == 335) {
-
-            /*
-             * Если фокус каким-либо образом оказался
-             * на элементе панели — просто возвращаем
-             * фокус обратно в чат.
-             */
-            if (YahoosteePanel.isPanelWidgetFocused(this)) {
-                this.setFocused(this.chatField);
-            }
-
-            /*
-             * Главное:
-             * ChatScreen не получает эти клавиши,
-             * поэтому Screen не сможет переключать
-             * фокус между кнопками панели.
-             */
-            ci.cancel();
-        }
-    }
+    
 }

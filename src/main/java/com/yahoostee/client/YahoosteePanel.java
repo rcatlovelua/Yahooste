@@ -8,7 +8,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
-import org.lwjgl.glfw.GLFW;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,7 @@ public class YahoosteePanel {
     private static final int SPACING = 4;
     private static final int MARGIN_RIGHT = 6;
     private static final int MARGIN_BOTTOM = 90;
+
     private static final int MAX_MACROS = 5;
     private static final int FIXED_ROWS = 7;
 
@@ -36,15 +36,14 @@ public class YahoosteePanel {
     private static final List<CustomBtn> customButtons =
             new ArrayList<>();
 
-    /*
-     * Все элементы панели.
-     * Нужны для определения того, получил ли фокус
-     * какой-нибудь элемент панели.
-     */
     private static final java.util.Set<ClickableWidget> panelWidgets =
             java.util.Collections.newSetFromMap(
                     new java.util.IdentityHashMap<>()
             );
+
+    // =========================================================
+    // ФОКУС
+    // =========================================================
 
     public static boolean isPanelWidgetFocused(
             net.minecraft.client.gui.screen.Screen screen
@@ -54,7 +53,9 @@ public class YahoosteePanel {
         return focused instanceof ClickableWidget widget
                 && panelWidgets.contains(widget);
     }
-
+    public static boolean isPanelWidget(ClickableWidget widget) {
+    return panelWidgets.contains(widget);
+}
     // =========================================================
     // ФАЙЛЫ
     // =========================================================
@@ -78,7 +79,9 @@ public class YahoosteePanel {
     // =========================================================
 
     private static void loadFiles() {
+
         try {
+
             Path coordsPath = getSavePath();
 
             if (Files.exists(coordsPath)) {
@@ -91,6 +94,7 @@ public class YahoosteePanel {
             Path macrosPath = getMacrosPath();
 
             if (Files.exists(macrosPath)) {
+
                 List<String> lines =
                         Files.readAllLines(macrosPath);
 
@@ -100,13 +104,16 @@ public class YahoosteePanel {
                             line.split("\\|", 2);
 
                     if (parts.length == 2) {
+
                         try {
+
                             customButtons.add(
                                     new CustomBtn(
                                             Action.valueOf(parts[0]),
                                             parts[1]
                                     )
                             );
+
                         } catch (Exception ignored) {
                         }
                     }
@@ -114,6 +121,7 @@ public class YahoosteePanel {
             }
 
         } catch (Exception e) {
+
             LOGGER.warning(
                     "YahoosteePanel: ошибка загрузки файлов: "
                             + e.getMessage()
@@ -130,13 +138,16 @@ public class YahoosteePanel {
         savedCoords = coords;
 
         try {
+
             Files.writeString(
                     getSavePath(),
                     coords
             );
+
         } catch (Exception e) {
+
             LOGGER.warning(
-                    "YahoosteePanel: не удалось сохранить координаты: "
+                    "YahoosteePanel: ошибка сохранения координат: "
                             + e.getMessage()
             );
         }
@@ -145,10 +156,12 @@ public class YahoosteePanel {
     private static void saveMacros() {
 
         try {
+
             List<String> lines =
                     new ArrayList<>();
 
             for (CustomBtn btn : customButtons) {
+
                 lines.add(
                         btn.action.name()
                                 + "|"
@@ -162,15 +175,16 @@ public class YahoosteePanel {
             );
 
         } catch (Exception e) {
+
             LOGGER.warning(
-                    "YahoosteePanel: не удалось сохранить макросы: "
+                    "YahoosteePanel: ошибка сохранения макросов: "
                             + e.getMessage()
             );
         }
     }
 
     // =========================================================
-    // РАЗМЕР ПАНЕЛИ
+    // РАЗМЕР
     // =========================================================
 
     private static int getPanelHeight() {
@@ -189,6 +203,7 @@ public class YahoosteePanel {
     private static void reloadScreen(
             TextFieldWidget chatField
     ) {
+
         String currentChat =
                 chatField.getText();
 
@@ -202,40 +217,31 @@ public class YahoosteePanel {
     }
 
     // =========================================================
-    // КНОПКИ
+    // КНОПКА БЕЗ ФОКУСА
     // =========================================================
 
     private static ButtonWidget createButton(
-            String text,
-            int x,
-            int y,
-            int width,
-            Runnable action
-    ) {
+        String text,
+        int x,
+        int y,
+        int width,
+        Runnable action
+) {
+    ButtonWidget button = ButtonWidget.builder(
+            Text.literal(text),
+            btn -> action.run()
+    ).dimensions(
+            x,
+            y,
+            width,
+            ELEMENT_HEIGHT
+    ).build();
 
-        ButtonWidget button =
-                ButtonWidget.builder(
-                        Text.literal(text),
-                        btn -> action.run()
-                )
-                .dimensions(
-                        x,
-                        y,
-                        width,
-                        ELEMENT_HEIGHT
-                )
-                .build();
+    button.setFocused(false);
 
-        /*
-         * Кнопка панели никогда не должна
-         * становиться фокусом.
-         */
-        button.setFocused(false);
-
-        panelWidgets.add(button);
-
-        return button;
-    }
+    return button;
+}
+    
 
     // =========================================================
     // GUI
@@ -245,7 +251,7 @@ public class YahoosteePanel {
             ChatScreen screen,
             int screenWidth,
             int screenHeight,
-            Consumer<ClickableWidget> widgetAdder,
+            Consumer<net.minecraft.client.gui.Drawable> widgetAdder,
             TextFieldWidget chatField
     ) {
 
@@ -270,8 +276,7 @@ public class YahoosteePanel {
                 y + SPACING;
 
         int elemWidth =
-                PANEL_WIDTH
-                        - SPACING * 2;
+                PANEL_WIDTH - SPACING * 2;
 
         int buttonWidth =
                 (elemWidth - SPACING) / 2;
@@ -280,17 +285,14 @@ public class YahoosteePanel {
         // КАСТОМНЫЙ ТЕКСТ
         // =====================================================
 
-        NoNavigationTextField customTextField =
-                new NoNavigationTextField(
+        TextFieldWidget customTextField =
+                new TextFieldWidget(
                         MinecraftClient.getInstance()
                                 .textRenderer,
-
                         x + SPACING,
                         currentY,
-
                         elemWidth,
                         ELEMENT_HEIGHT,
-
                         Text.empty()
                 );
 
@@ -321,17 +323,14 @@ public class YahoosteePanel {
         // КООРДИНАТЫ
         // =====================================================
 
-        NoNavigationTextField coordsTextField =
-                new NoNavigationTextField(
+        TextFieldWidget coordsTextField =
+                new TextFieldWidget(
                         MinecraftClient.getInstance()
                                 .textRenderer,
-
                         x + SPACING,
                         currentY,
-
                         elemWidth,
                         ELEMENT_HEIGHT,
-
                         Text.empty()
                 );
 
@@ -365,12 +364,9 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "Записать позицию",
-
                         x + SPACING,
                         currentY,
-
                         elemWidth,
-
                         () -> {
 
                             String coords =
@@ -394,12 +390,9 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "Вставить коорд.",
-
                         x + SPACING,
                         currentY,
-
                         buttonWidth,
-
                         () -> {
 
                             if (!coordsTextField
@@ -422,16 +415,13 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "Вставить позицию",
-
                         x + SPACING
                                 + buttonWidth
                                 + SPACING,
-
                         currentY,
-
                         buttonWidth,
-
                         () -> {
+
                             chatField.write(
                                     getCoords(false)
                             );
@@ -449,12 +439,9 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "Вставить текст из поля",
-
                         x + SPACING,
                         currentY,
-
                         elemWidth,
-
                         () -> {
 
                             if (!customTextField
@@ -477,26 +464,15 @@ public class YahoosteePanel {
         // РАЗДЕЛИТЕЛЬ
         // =====================================================
 
-        ButtonWidget divider =
-                ButtonWidget.builder(
-                        Text.literal(
-                                "═══════ Макросы ═══════"
-                        ),
-                        btn -> {}
-                )
-                .dimensions(
+        widgetAdder.accept(
+                createButton(
+                        "═══════ Макросы ═══════",
                         x + SPACING,
                         currentY,
                         elemWidth,
-                        ELEMENT_HEIGHT
+                        () -> {}
                 )
-                .build();
-
-        divider.setFocused(false);
-
-        panelWidgets.add(divider);
-
-        widgetAdder.accept(divider);
+        );
 
         currentY +=
                 ELEMENT_HEIGHT + SPACING;
@@ -513,12 +489,9 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "📝 Текст",
-
                         x + SPACING,
                         currentY,
-
                         macroBtnWidth,
-
                         () -> {
 
                             if (customButtons.size()
@@ -555,15 +528,11 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "📌 Коорд.",
-
                         x + SPACING
                                 + macroBtnWidth
                                 + SPACING,
-
                         currentY,
-
                         macroBtnWidth,
-
                         () -> {
 
                             if (customButtons.size()
@@ -592,15 +561,11 @@ public class YahoosteePanel {
         widgetAdder.accept(
                 createButton(
                         "📍 Позиция",
-
                         x + SPACING
                                 + (macroBtnWidth
                                 + SPACING) * 2,
-
                         currentY,
-
                         macroBtnWidth,
-
                         () -> {
 
                             if (customButtons.size()
@@ -640,40 +605,26 @@ public class YahoosteePanel {
 
             int finalI = i;
 
-            // Основная кнопка
-
-            ButtonWidget actionBtn =
+            widgetAdder.accept(
                     createButton(
                             cb.getLabel(),
-
                             x + SPACING,
                             currentY,
-
                             elemWidth - 24,
-
                             () -> cb.execute(
                                     chatField
                             )
-                    );
-
-            widgetAdder.accept(
-                    actionBtn
+                    )
             );
 
-            // Удаление
-
-            ButtonWidget deleteBtn =
+            widgetAdder.accept(
                     createButton(
                             "✕",
-
                             x + SPACING
                                     + elemWidth
                                     - 24,
-
                             currentY,
-
                             20,
-
                             () -> {
 
                                 customButtons
@@ -685,25 +636,17 @@ public class YahoosteePanel {
                                         chatField
                                 );
                             }
-                    );
-
-            widgetAdder.accept(
-                    deleteBtn
+                    )
             );
 
             currentY +=
                     ELEMENT_HEIGHT + SPACING;
         }
 
-        /*
-         * КРИТИЧНО:
-         *
-         * После создания всех элементов
-         * снова возвращаем фокус в чат.
-         *
-         * Поэтому стрелки и Enter
-         * больше не переключают элементы панели.
-         */
+        // =====================================================
+        // ФОКУС ТОЛЬКО НА ЧАТ
+        // =====================================================
+
         screen.setFocused(chatField);
     }
 
@@ -823,56 +766,22 @@ public class YahoosteePanel {
     }
 
     // =========================================================
-    // NO NAVIGATION TEXT FIELD
-    // =========================================================
-
-    /*
-     * Это главное исправление.
-     *
-     * Стрелки:
-     * ← ↑ ↓ →
-     *
-     * Enter
-     *
-     * НЕ используются Minecraft-ом
-     * для навигации панели.
-     *
-     * Остальной ввод текста работает нормально.
-     */
-    private static class NoNavigationTextField extends TextFieldWidget {
-
-    public NoNavigationTextField(
-            net.minecraft.client.font.TextRenderer textRenderer,
-            int x,
-            int y,
-            int width,
-            int height,
-            Text text
-    ) {
-        super(
-                textRenderer,
-                x,
-                y,
-                width,
-                height,
-                text
-        );
-    }
-
-    
-}
-
-    // =========================================================
     // МАКРОСЫ
     // =========================================================
 
     private enum Action {
 
-        PASTE_TEXT("Вставить текст"),
+        PASTE_TEXT(
+                "Вставить текст"
+        ),
 
-        PASTE_COORDS("Вставить коорд."),
+        PASTE_COORDS(
+                "Вставить коорд."
+        ),
 
-        PASTE_POS("Вставить позицию");
+        PASTE_POS(
+                "Вставить позицию"
+        );
 
         final String displayName;
 
@@ -891,15 +800,14 @@ public class YahoosteePanel {
                 Action action,
                 String payload
         ) {
-
             this.action = action;
             this.payload = payload;
         }
 
         String getLabel() {
 
-            if (action
-                    == Action.PASTE_TEXT) {
+            if (action ==
+                    Action.PASTE_TEXT) {
 
                 String t = payload;
 
@@ -909,18 +817,15 @@ public class YahoosteePanel {
                 }
 
                 return "📝 " + t;
+            }
 
-            } else if (
-                    action
-                            == Action.PASTE_COORDS
-            ) {
+            if (action ==
+                    Action.PASTE_COORDS) {
 
                 return "📌 Координаты";
-
-            } else {
-
-                return "📍 Позиция";
             }
+
+            return "📍 Позиция";
         }
 
         void execute(
