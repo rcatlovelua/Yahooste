@@ -1,7 +1,7 @@
 # Yahooste
 
 <p align="center">
-  <img width="180" alt="Yahooste Logo" src="https://github.com/rcatlovelua/Yahooste/blob/main/.not-for-mod-srcc/yahoostee.png?raw=true">
+  <img width="180" alt="Yahooste Logo" src="https://raw.githubusercontent.com/rcatlovelua/Yahooste/refs/heads/main/.not-for-mod-srcc/Yahoostee.png">
 </p>
 
 <details>
