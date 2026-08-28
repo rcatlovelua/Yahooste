@@ -1,10 +1,9 @@
 # Yahooste
 
 <p align="center">
-  <img width="180" alt="Yahooste Logo" src="https://raw.githubusercontent.com/rcatlovelua/Yahooste/refs/heads/main/.not-for-mod-srcc/Yahoostee.png">
-</p>
+  <img width="180" alt="Yahooste Logo" src="https://raw.githubusercontent.com/rcatlovelua/Yahooste/refs/heads/main/.not-for-mod-srcc/Yahoostee.png"> </p>
 <p align="center">
-  <img width="2000" alt="Yahooste Logo" src="https://raw.githubusercontent.com/rcatlovelua/Yahooste/refs/heads/main/.not-for-mod-srcc/banner.png">
+  <img width="2333" alt="Yahooste Logo" src="https://raw.githubusercontent.com/rcatlovelua/Yahooste/refs/heads/main/.not-for-mod-srcc/banner.png">
 </p>
 <details>
 <summary><b>🇬🇧 English Description</b></summary>
