@@ -12,7 +12,7 @@
 A simple Minecraft mod designed for quickly pasting pre-defined text snippets that are otherwise tedious to type out manually in chat. Perfect for Vanilla, SMP servers, or lightweight Vanilla+ modpacks.
 
 Install and go—zero complex configurations required.
-
+> [!] Save once use forever is temporarily tuned off in 1.1
 *(Supports both auto-paste functionality and a "save once, use forever" system).*
 
 *The name is a blend of Yahoo + Paste.*
@@ -49,7 +49,7 @@ The menu automatically appears in the **bottom-right corner** of your screen whe
 Поставил и пользуешься — никаких сложных настроек тут просто нет.
 
 *(Есть как авто-вставка, так и тема «один раз ввёл — используешь всегда»)*
-
+> [!] один раз ввёл — используешь всегда временно не поддерживается в 1.1
 *Название собрано из Yahoo + Paste.*
 
 ---
